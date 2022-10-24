@@ -6,6 +6,7 @@ TITLE ANGELO GERALDO PEREIRA JUNIOR RA:21008767
 conta db 10,'Digite qual operaca_o vai ser realizada( + - * / )',10,': $'
 msg1 db 10,'Digite o primeiro numero: $'
 msg2 db 10,"Digite o segundo numero: $"
+resu db 10,'Resultado: $'
 .code
 
 impmsg MACRO FUN,ende
@@ -29,47 +30,53 @@ main proc
     ; int 21h
     impmsg 09,conta
     ler 01
-    mov bh,ah
+    mov bl,al
     
     
-    cmp bh,'+'
+    cmp bl,'+'
     jz soma
-    cmp bh,'-'
+    cmp bl,'-'
     jz subt
-    cmp bh,'*'
+    cmp bl,'*'
     jz mult
-    cmp bh,'/'
+    cmp bl,'/'
     jz divi
 
 
 soma:
     impmsg 09,msg1
     ler 01 
+    mov ch,al
     impmsg 09,msg2
-    jmp exit
+    ler 01
+    mov cl,al
+    xor ax,ax
+    add ch,cl
+    jmp saida
+    
+    
 
 subt:
     impmsg 09,msg1
     impmsg 09,msg2
-    jmp exit
+    jmp saida
 
 divi:
     impmsg 09,msg1
     impmsg 09,msg2
-    jmp exit
+    jmp saida
 
 mult:
     impmsg 09,msg1
     impmsg 09,msg2
-    jmp exit
+    jmp saida
 
 saida:
     mov AH,4ch
     int 21h
-main endp
-end main
 
-print proc
+print:
+    ;impmsg 09,resu
     ;...
     mov cl,10
     div cl
@@ -78,11 +85,17 @@ print proc
     or dl,30h
     mov ah,2
     int 21h
-    mov dl,bh
+    mov dl,bl
     mov dl,30h
     mov ah,2
     int 21h
     jmp saida
+;print endp
+
+main endp
+end main
+
+
 
 
 
